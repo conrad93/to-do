@@ -1,13 +1,40 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Week } from '../models/week.model';
+import { environment } from 'src/environments/environment.development';
+import { BehaviorSubject } from 'rxjs';
+import { ToDo } from '../models/to-do.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToDoService {
 
-  constructor() { }
+  apiUrl = environment.apiUrl;
+  todoData = new BehaviorSubject<ToDo[]>([]);
+
+  constructor(private http: HttpClient) { }
+
+  setToDoData(data: ToDo[]){
+    this.todoData.next(data);
+  }
+
+  getData(){
+    this.http.get(this.apiUrl + "/to-do-data").subscribe({
+      next: (res: any) => {
+        if(res["status"]) this.setToDoData(res["data"]);
+      },
+      error: (err) => {
+        console.log("🚀 ~ ToDoService ~ this.http.get ~ err:", err);
+      }
+    });
+  }
+
+  getWeeklyItems(date: string): ToDo[] {
+    console.log(this.todoData)
+    return [];
+  }
 
   getWeek(date: string = ''): Week[] {
     let week = [];
