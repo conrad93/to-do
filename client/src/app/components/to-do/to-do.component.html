@@ -1,1 +1,42 @@
-<p>to-do works!</p>
+<div class="container-fluid p-3">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center text-decoration-underline">TO-DO APP</h2>
+        </div>
+    </div>
+    <div class="row" *ngIf="isLoading; else notLoading;">
+        <div class="col-md-12 d-flex justify-content-center align-items-center p-3">
+            <span class="spinner-border text-primary"></span>
+        </div>
+    </div>
+    <ng-template #notLoading>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-end align-items-center p-3">
+                <div class="btn-group" role="group" aria-label="Pagination button group">
+                    <button type="button" class="btn btn-light" (click)="getPrevious()">Previous</button>
+                    <button type="button" class="btn btn-light" (click)="getToday()">Today</button>
+                    <button type="button" class="btn btn-light" (click)="getNext()">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 p-3">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let w of week" class="text-center">
+                                    <small class="{{w.isToday ? 'text-primary': 'text-muted'}}">{{w.day}}</small>
+                                    <span>
+                                    </span>
+                                    <h6 class="{{w.isToday ? 'text-primary': ''}}">{{w.date}}</h6>
+                                    <small class="{{w.isToday ? 'text-primary': 'text-muted'}}">{{w.month + ' - ' + w.year}}</small>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
