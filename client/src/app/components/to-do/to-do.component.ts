@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToDo } from 'src/app/models/to-do.model';
 import { Week } from 'src/app/models/week.model';
 import { ToDoService } from 'src/app/services/to-do.service';
@@ -8,7 +8,7 @@ import { ToDoService } from 'src/app/services/to-do.service';
   templateUrl: './to-do.component.html',
   styleUrls: ['./to-do.component.scss']
 })
-export class ToDoComponent implements OnInit {
+export class ToDoComponent implements OnInit, OnDestroy {
   
   isLoading = true;
   week: Week[] = [];
@@ -22,8 +22,10 @@ export class ToDoComponent implements OnInit {
   }
   
   getWeek(){
+    this.todoService.updateData(this.weeklyItems);
     this.isLoading = true;
     this.week = this.todoService.getWeek(this.currentDate);
+    this.weeklyItems = this.todoService.getWeeklyItems(this.currentDate);
     this.isLoading = false;
   }
   
@@ -41,4 +43,10 @@ export class ToDoComponent implements OnInit {
     this.currentDate = this.todoService.getNext(this.currentDate);
     this.getWeek();
   }
+
+  ngOnDestroy(): void {
+    this.todoService.updateData(this.weeklyItems);
+    this.todoService.saveData();
+  }
+
 }

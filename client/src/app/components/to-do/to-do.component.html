@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-md-12 p-3">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th *ngFor="let w of week" class="text-center">
@@ -34,6 +34,18 @@
                                 </th>
                             </tr>
                         </thead>
+                        <tbody>
+                            <tr>
+                                <td *ngFor="let w of week" class="text-center">
+                                    <div *ngFor="let item of weeklyItems; let i = index;">
+                                        {{item.title}}
+                                    </div>
+                                    <div *ngIf="!w.isExpired">
+                                        <button type="button" class="btn btn-outline-warning">Add Item</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

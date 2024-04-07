@@ -9,12 +9,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToDoService } from './services/to-do.service';
-import { take } from 'rxjs';
+import { ToDoFormComponent } from './components/to-do-form/to-do-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ToDoComponent
+    ToDoComponent,
+    ToDoFormComponent
   ],
   imports: [
     BrowserModule,
@@ -29,14 +30,14 @@ import { take } from 'rxjs';
       provide: APP_INITIALIZER,
       multi: true,
       useFactory: (todoService: ToDoService) => {
-        return () => {
-          todoService.getData();
-          return todoService.todoData.pipe(take(1));
+        return (): Promise<any> => {
+          return todoService.getData();
         }
       },
       deps: [ToDoService]
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ToDoFormComponent]
 })
 export class AppModule { }

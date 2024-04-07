@@ -13,13 +13,36 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: false}));
 app.use(express.static(path.resolve(__dirname, "../client/dist")));
 
-app.get("/to-do-data", (req, res) => {
+app.get("/get-data", async (req, res) => {
     try {
-        let data = fs.readFile('to-do.json', 'utf8');
+        let data = await fs.readFile('to-do.json', 'utf8');
         res.status(200).send({status: true, data: JSON.parse(data)});
 
     } catch (err) {
-        console.log("🚀 ~ to-do-data ~ err:", err);
+        console.log("🚀 ~ get-data ~ err:", err);
+        res.status(500).send({status: false, message: err.message});
+    }
+});
+
+app.post("/save-data", async (req, res) => {
+    try {
+        let reqData = req.body.data;
+        let fileData = await fs.readFile('to-do.json', 'utf8');
+        let data = JSON.parse(fileData);
+        reqData.forEach(item => {
+            let index = data.findIndex(mainItem => mainItem.id === item.id);
+            if(index !== -1){
+                data[index] = item;
+            } else {
+                data.push(item);
+            }
+        });
+        data.sort((a,b) => +a.id - +b.id);
+        let stringData = JSON.stringify(data);
+        fs.writeFile('to-do.json', stringData, 'utf8');
+        res.status(200).send({status: true, data: JSON.parse(data)});
+    } catch (err) {
+        console.log("🚀 ~ save-data ~ err:", err);
         res.status(500).send({status: false, message: err.message});
     }
 });

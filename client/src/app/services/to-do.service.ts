@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Week } from '../models/week.model';
 import { environment } from 'src/environments/environment.development';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ToDo } from '../models/to-do.model';
 import { HttpClient } from '@angular/common/http';
 
@@ -20,20 +20,41 @@ export class ToDoService {
     this.todoData.next(data);
   }
 
-  getData(){
-    this.http.get(this.apiUrl + "/to-do-data").subscribe({
-      next: (res: any) => {
-        if(res["status"]) this.setToDoData(res["data"]);
-      },
-      error: (err) => {
-        console.log("🚀 ~ ToDoService ~ this.http.get ~ err:", err);
-      }
-    });
+  async getData(): Promise<any> {
+    try {
+      const res: any = await firstValueFrom(this.http.get(this.apiUrl + "/get-data"));
+      if(res["status"]) this.setToDoData(res["data"]);
+      return res;
+    } catch (err) {
+      console.log("🚀 ~ ToDoService ~ getData ~ err:", err)
+      throw err;
+    }
   }
 
   getWeeklyItems(date: string): ToDo[] {
-    console.log(this.todoData)
-    return [];
+    let startOfWeek = moment(date).startOf('week');
+    return this.todoData.value.filter(item => 
+      moment(item.date).isBetween(startOfWeek, startOfWeek.clone().endOf('week'), undefined, '[]')
+    );
+  }
+
+  updateData(data: ToDo[]){
+    if(!data.length) return;
+    let mainData = this.todoData.value;
+    data.forEach(item => {
+      let index = mainData.findIndex(mainItem => mainItem.id === item.id);
+      if(index !== -1){
+        mainData[index] = item;
+      } else {
+        mainData.push(item);
+      }
+    });
+    mainData.sort((a,b) => +a.id - +b.id);
+    this.setToDoData(mainData);
+  }
+
+  saveData(){
+    this.http.post(this.apiUrl + "/save-data", {data: this.todoData.value}, {});
   }
 
   getWeek(date: string = ''): Week[] {
