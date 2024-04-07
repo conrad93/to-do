@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Week } from '../models/week.model';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ToDo } from '../models/to-do.model';
 import { HttpClient } from '@angular/common/http';
