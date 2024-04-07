@@ -1,0 +1,13 @@
+{
+  "name": "to-do",
+  "version": "1.0.0",
+  "description": "To-Do App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client":  "cd client && npm install && npm run build",
+    "server":  "cd server && npm install"
+  },
+  "author": "",
+  "license": "ISC"
+}
