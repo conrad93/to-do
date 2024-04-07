@@ -1,9 +1,4 @@
 <div class="container-fluid p-3">
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="text-center text-decoration-underline">TO-DO APP</h2>
-        </div>
-    </div>
     <div class="row" *ngIf="isLoading; else notLoading;">
         <div class="col-md-12 d-flex justify-content-center align-items-center p-3">
             <span class="spinner-border text-primary"></span>
@@ -11,7 +6,8 @@
     </div>
     <ng-template #notLoading>
         <div class="row">
-            <div class="col-md-12 d-flex justify-content-end align-items-center p-3">
+            <div class="col-md-12 d-flex justify-content-between align-items-center p-3">
+                <h2 class="text-center text-decoration-underline">TO-DO APP</h2>
                 <div class="btn-group" role="group" aria-label="Pagination button group">
                     <button type="button" class="btn btn-light" (click)="getPrevious()">Previous</button>
                     <button type="button" class="btn btn-light" (click)="getToday()">Today</button>
@@ -37,11 +33,21 @@
                         <tbody>
                             <tr>
                                 <td *ngFor="let w of week" class="text-center">
-                                    <div *ngFor="let item of weeklyItems; let i = index;">
-                                        {{item.title}}
-                                    </div>
+                                    <ng-container *ngFor="let item of weeklyItems; let i = index;">
+                                        <div *ngIf="w.fullDate === item.date" class="d-flex justify-content-center align-items-center my-2 px-2">
+                                            <div *ngIf="!item.status" (click)="changeStatus(i)" class="text-success cursor">
+                                                <i class="fa fa-check-circle"></i>
+                                            </div>
+                                            <div (click)="editItem(w, item)" class="{{item.status ? 'bg-success text-white': 'bg-light'}} rounded mx-2 px-2 cursor">
+                                                {{item.title}}
+                                            </div>
+                                            <div (click)="deleteItem(i)" class="text-danger cursor">
+                                                <i class="fa fa-trash"></i>
+                                            </div>
+                                        </div>
+                                    </ng-container>
                                     <div *ngIf="!w.isExpired">
-                                        <button type="button" class="btn btn-outline-warning">Add Item</button>
+                                        <button type="button" (click)="addItem(w)" class="btn btn-outline-warning">Add Item</button>
                                     </div>
                                 </td>
                             </tr>

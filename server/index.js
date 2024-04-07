@@ -17,7 +17,6 @@ app.get("/get-data", async (req, res) => {
     try {
         let data = await fs.readFile('to-do.json', 'utf8');
         res.status(200).send({status: true, data: JSON.parse(data)});
-
     } catch (err) {
         console.log("🚀 ~ get-data ~ err:", err);
         res.status(500).send({status: false, message: err.message});
@@ -40,7 +39,8 @@ app.post("/save-data", async (req, res) => {
         data.sort((a,b) => +a.id - +b.id);
         let stringData = JSON.stringify(data);
         fs.writeFile('to-do.json', stringData, 'utf8');
-        res.status(200).send({status: true, data: JSON.parse(data)});
+
+        res.status(200).send({status: true});
     } catch (err) {
         console.log("🚀 ~ save-data ~ err:", err);
         res.status(500).send({status: false, message: err.message});

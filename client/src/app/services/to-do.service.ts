@@ -42,7 +42,7 @@ export class ToDoService {
     if(!data.length) return;
     let mainData = this.todoData.value;
     data.forEach(item => {
-      let index = mainData.findIndex(mainItem => mainItem.id === item.id);
+      let index = mainData.findIndex(mainItem => +mainItem.id === +item.id);
       if(index !== -1){
         mainData[index] = item;
       } else {
@@ -53,8 +53,8 @@ export class ToDoService {
     this.setToDoData(mainData);
   }
 
-  saveData(){
-    this.http.post(this.apiUrl + "/save-data", {data: this.todoData.value}, {});
+  async saveData(){
+    const res: any = await firstValueFrom(this.http.post(this.apiUrl + "/save-data", {data: this.todoData.value}, {}));
   }
 
   getWeek(date: string = ''): Week[] {
