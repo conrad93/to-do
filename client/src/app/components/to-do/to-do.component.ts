@@ -115,7 +115,8 @@ export class ToDoComponent implements OnInit, OnDestroy {
   deleteItem(id: any){
     let index = this.weeklyItems.findIndex(mainItem => +mainItem.id === +id);
     this.weeklyItems.splice(index, 1);
-    this.handleSave();
+    this.todoService.deleteData(id);
+    this.todoService.saveData();
     this.processItems();
   }
 

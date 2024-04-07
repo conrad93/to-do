@@ -53,6 +53,14 @@ export class ToDoService {
     this.setToDoData(mainData);
   }
 
+  deleteData(id: number){
+    let mainData = this.todoData.value;
+    let index = mainData.findIndex(mainItem => +mainItem.id === +id);
+    mainData.splice(index, 1);
+    mainData.sort((a,b) => +a.id - +b.id);
+    this.setToDoData(mainData);
+  }
+
   async saveData(){
     const res: any = await firstValueFrom(this.http.post(this.apiUrl + "/save-data", {data: this.todoData.value}, {}));
   }
