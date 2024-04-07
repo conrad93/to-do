@@ -26,18 +26,8 @@ app.get("/get-data", async (req, res) => {
 app.post("/save-data", async (req, res) => {
     try {
         let reqData = req.body.data;
-        let fileData = await fs.readFile('to-do.json', 'utf8');
-        let data = JSON.parse(fileData);
-        reqData.forEach(item => {
-            let index = data.findIndex(mainItem => mainItem.id === item.id);
-            if(index !== -1){
-                data[index] = item;
-            } else {
-                data.push(item);
-            }
-        });
-        data.sort((a,b) => +a.id - +b.id);
-        let stringData = JSON.stringify(data);
+        reqData.sort((a,b) => +a.id - +b.id);
+        let stringData = JSON.stringify(reqData);
         fs.writeFile('to-do.json', stringData, 'utf8');
 
         res.status(200).send({status: true});
